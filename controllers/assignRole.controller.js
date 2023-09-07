@@ -8,6 +8,11 @@ export const assignRole = async (req, res) => {
     return res.status(403).json({ error: 'No tienes permiso para realizar esta acción' });
   }
 
+
+  if(userId === req.user.userId){
+    return res.status(403).json({ error: 'No puedes modificar tu mismo Usuario' });
+  }
+
   try {
     // Validar que el nuevo rol sea válido antes de asignarlo
     if (!isValidRole(newRole)) {
@@ -18,6 +23,10 @@ export const assignRole = async (req, res) => {
     const user = await User.findByPk(userId);
     if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    if(user.rol === newRole){
+      return res.status(403).json({ error: 'El usuario ya tiene el rol asignado' });
     }
 
     user.rol = newRole;
