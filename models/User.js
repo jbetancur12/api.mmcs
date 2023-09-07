@@ -18,7 +18,7 @@ export const User = sequelize.define('users', {
   },
   direccion: {
     type: DataTypes.STRING,
-    allowNull: false,
+    // allowNull: false,
   },
   email: {
     type: DataTypes.STRING,
@@ -27,26 +27,34 @@ export const User = sequelize.define('users', {
       isEmail: true,
     },
   },
-  telefono: {
+  contraseña: {
     type: DataTypes.STRING,
     allowNull: false,
+  },
+  telefono: {
+    type: DataTypes.STRING,
+    // allowNull: false,
   },
   ciudad: {
     type: DataTypes.STRING,
-    allowNull: false,
+    // allowNull: false,
   },
   departamento: {
     type: DataTypes.STRING,
-    allowNull: false,
+    // allowNull: false,
   },
   pais: {
     type: DataTypes.STRING,
-    allowNull: false,
+    // allowNull: false,
   },
   rol: {
     type: DataTypes.STRING,
-    allowNull: false,
+    defaultValue: "user"
   },
+  active: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  }
 });
 
 User.hasMany(File, {

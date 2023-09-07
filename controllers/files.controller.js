@@ -12,6 +12,7 @@ export const createFile = (req, res) => {
   const file = req.file;
   const { name, dalibrationDate } = req.body;
 
+
   const finalName = name ? name : file.originalname;
 
   const fileName =  `${Date.now()}-${file.originalname}`;
@@ -25,7 +26,7 @@ export const createFile = (req, res) => {
     try {
       const newFile = await File.create({
         name: file.originalname,
-        dalibrationDate: new Date(), // Puedes ajustar esta fecha según tus necesidades
+        dalibrationDate: new Date(dalibrationDate), // Puedes ajustar esta fecha según tus necesidades
         filePath: fileName,
       });
 
