@@ -1,23 +1,25 @@
+import config from "../config/config.js";
 import minioClient from "../config/minio.js";
-import { File } from "../models/file.js";
+import { File } from "../models/File.js";
 
 
 
-export const getFiles = (req, res) => {
-  res.send('Getting projects');
+export const getFiles = async (req, res) => {
+  const files = await File.findAll();
+  res.json(files)
 }
 
 //POST
 export const createFile = (req, res) => {
   const file = req.file;
-  const { name, dalibrationDate } = req.body;
+  const { name, dalibrationDate, userId } = req.body;
 
 
   const finalName = name ? name : file.originalname;
 
-  const fileName =  `${Date.now()}-${file.originalname}`;
+  const fileName = `${Date.now()}-${file.originalname}`;
 
-  minioClient.putObject('first-bucket', fileName, file.buffer, async (err, etag) => {
+  minioClient.putObject(config.minioBucketName, fileName, file.buffer, async (err, etag) => {
     if (err) {
       console.error(err);
       return res.status(500).send('Error al subir el archivo a MinIO');
@@ -28,6 +30,7 @@ export const createFile = (req, res) => {
         name: file.originalname,
         dalibrationDate: new Date(dalibrationDate), // Puedes ajustar esta fecha según tus necesidades
         filePath: fileName,
+        userId
       });
 
       res.json({
@@ -46,17 +49,34 @@ export const createFile = (req, res) => {
   });
 }
 
-export const getFile = (req, res) => {
+export const getFile = async (req, res) => {
+  try {
+    const { id } = req.params
+    const file = await File.findOne({
+      where: {
+        id
+      }
+    })
+
+    if(!file) return res.status(404).json({message: 'File No Existe'})
+
+    res.json(file)
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+}
+
+export const downloadFile = (req, res) => {
   const { id } = req.params
-  const bucketName = 'first-bucket';
+  const bucketName = config.minioBucketName;
 
   const partes = id.split("-");
   let resultado = "";
 
   if (partes.length > 1) {
-      resultado = partes.slice(1).join("-");
+    resultado = partes.slice(1).join("-");
   } else {
-      resultado = id;
+    resultado = id;
   }
 
   minioClient.getObject(bucketName, id, (err, result) => {
@@ -89,7 +109,7 @@ export const deleteFile = async (req, res) => {
     const fileName = file.filePath;
 
     // Eliminar el archivo de MinIO
-    minioClient.removeObject('first-bucket', fileName, (err) => {
+    minioClient.removeObject(config.bucketName, fileName, (err) => {
       if (err) {
         console.error(err);
         return res.status(500).send('Error al eliminar el archivo de MinIO');

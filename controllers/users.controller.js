@@ -1,3 +1,4 @@
+import { File } from '../models/File.js';
 import { User } from '../models/User.js';
 
 // Obtener todos los usuarios
@@ -14,7 +15,11 @@ export const getUsers = async (req, res) => {
 export const getUserById = async (req, res) => {
   const { id } = req.params;
   try {
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(id, {
+      attributes: {
+        exclude: ['contraseña',"id"], // Excluye el campo 'contraseña' del resultado
+      },
+    });
     if (user) {
       res.status(200).json(user);
     } else {
@@ -68,3 +73,13 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ error: 'Error al eliminar usuario' });
   }
 };
+
+
+export const getUserFiles = async (req, res) => {
+  const { id } = req.params
+  const files = await File.findAll({
+    where: { userId: id }
+  })
+
+  res.json(files)
+}

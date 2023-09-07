@@ -36,4 +36,17 @@ export const authorizeAdmin = (req, res, next) => {
   }
 };
 
+export const authorizeUserOrAdmin = (req, res, next) => {
+  const userId = req.user.userId; // Obtén el ID del usuario autenticado
+  const requestedUserId = parseInt(req.params.id); // Obtén el ID del usuario solicitado desde la ruta
+
+  if (userId === requestedUserId || req.user.rol === 'admin') {
+    // Si el usuario es el mismo que el solicitado o es un administrador, permite el acceso
+    next();
+  } else {
+    // Si el usuario no es el mismo ni es un administrador, devuelve un error 403 (Prohibido)
+    res.status(403).json({ error: 'No tienes permiso para acceder a esta ruta' });
+  }
+};
+
 

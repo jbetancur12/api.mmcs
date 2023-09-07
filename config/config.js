@@ -12,7 +12,8 @@ const config = {
   dbHost: process.env.DB_HOST || 'localhost',
   minioHost:  process.env.MINIO_HOST || 'localhost',
   minioAccessKey: process.env.MINIO_ACCESS_KEY || 'tu_access_key', // Reemplaza con tu clave de acceso de Minio
-  minioSecretKey: process.env.MINIO_SECRET_KEY || 'tu_secret_key'
+  minioSecretKey: process.env.MINIO_SECRET_KEY || 'tu_secret_key',
+  minioBucketName : process.env.MINIO_BUCKET_NAME
 }
 
 export default config

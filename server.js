@@ -1,10 +1,10 @@
 import app from './app.js';
 import config from './config/config.js';
 import sequelize from './config/database.js';
-import { createAdminUser } from './create-admin-user.js';
 
-import './models/File.js';
-import './models/User.js';
+import { createAdminUser } from './create-admin-user.js';
+// import './models/File.js';
+// import './models/User.js';
 import { User } from './models/User.js';
 
 async function main() {
@@ -34,12 +34,12 @@ async function main() {
 //     console.log("Connection has been stablished successfully.")
 
 //      // Verifica si la tabla 'users' tiene algún registro
-//      const userCount = await User.count();
+//     //  const userCount = await User.count();
 
-//      if (userCount === 0) {
-//        // Si no hay registros en la tabla 'users', crea el usuario administrador
-//        await createAdminUser();
-//      }
+//     //  if (userCount === 0) {
+//     //    // Si no hay registros en la tabla 'users', crea el usuario administrador
+//     //    await createAdminUser();
+//     //  }
 
 //     app.listen(config.port, (err) => {
 //       if (err) {
