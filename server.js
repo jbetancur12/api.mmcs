@@ -3,6 +3,8 @@ import config from './config/config.js';
 import sequelize from './config/database.js';
 
 import { createAdminUser } from './create-admin-user.js';
+// import './models/CertificateType.js';
+// import './models/Device.js';
 // import './models/File.js';
 // import './models/User.js';
 import { User } from './models/User.js';

@@ -12,7 +12,7 @@ export const getFiles = async (req, res) => {
 //POST
 export const createFile = (req, res) => {
   const file = req.file;
-  const { name, dalibrationDate, userId } = req.body;
+  const { name, dalibrationDate, userId, deviceId } = req.body;
 
 
   const finalName = name ? name : file.originalname;
@@ -30,7 +30,8 @@ export const createFile = (req, res) => {
         name: file.originalname,
         dalibrationDate: new Date(dalibrationDate), // Puedes ajustar esta fecha según tus necesidades
         filePath: fileName,
-        userId
+        userId,
+        deviceId
       });
 
       res.json({

@@ -40,7 +40,7 @@ export const registerUser = async (req, res) => {
     // Crear un token JWT para el nuevo usuario
     // const token = createToken(newUser.id, newUser.email);
 
-    res.status(201).json("Usuario Registrado");
+    res.status(201).json(newUser);
   } catch (error) {
     res.status(500).json({ error: 'Error al registrar el usuario' });
   }
@@ -59,12 +59,17 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
-    console.log("=====>",user.rol)
+
 
     // Crear un token JWT para el usuario
     const token = createToken(user.id, user.email, user.rol);
 
-    res.status(200).json({ token });
+    res.status(200).json({ token, user: {
+      id: user.id,
+      email: user.email,
+      name: user.nombre,
+      rol: user.rol
+    } });
   } catch (error) {
     res.status(500).json({ error: 'Error al iniciar sesión' });
   }

@@ -11,7 +11,32 @@ export const File = sequelize.define('files', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  dalibrationDate: {
+  city: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  location: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  sede: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  activoFijo: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  serie: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  calibrationDate: {
+    type: DataTypes.DATE,
+    allowNull: false
+  },
+  nextCalibrationDate :
+  {
     type: DataTypes.DATE,
     allowNull: false
   },

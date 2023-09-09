@@ -6,7 +6,7 @@ import {
   getUsers,
   updateUser
 } from '../controllers/users.controller.js';
-import { authenticateJWT, authorizeAdmin, authorizeUserOrAdmin } from '../middlewares/authorizationMiddleware.js';
+import { authenticateJWT, authorizeUserOrAdmin } from '../middlewares/authorizationMiddleware.js';
 
 const router = Router();
 
@@ -14,8 +14,8 @@ const router = Router();
 router.get('/users', getUsers);
 router.get('/users/:id', authenticateJWT, authorizeUserOrAdmin, getUserById);
 // router.post('/users', createUser);
-router.put('/users/:id', authenticateJWT, authorizeAdmin, updateUser);
-router.delete('/users/:id', authenticateJWT, authorizeAdmin ,deleteUser);
+router.put('/users/:id', updateUser);
+router.delete('/users/:id' ,deleteUser);
 router.get('/users/:id/files', authenticateJWT, authorizeUserOrAdmin, getUserFiles);
 
 
