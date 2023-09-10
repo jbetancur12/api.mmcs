@@ -72,12 +72,12 @@ User.beforeCreate(async (user, options) => {
 
 User.hasMany(File, {
   foreignKey: 'userId',
-  sourceKey: 'id'
+  // sourceKey: 'id'
 })
 
 File.belongsTo(User, {
   foreignKey: 'userId',
-  targetId: 'id'
+  // targetId: 'id'
 })
 
 

@@ -1,5 +1,10 @@
-import { CertificateType } from '../models/CertificateType.js';
-import { File } from '../models/File.js';
+// import { CertificateType } from '../models/certificatetype.cjs';
+// import { File } from '../models/file.cjs';
+
+import db from '../models/index.cjs';
+
+const File = db.files
+const CertificateType = db.certificateType
 
 // Obtener todos los tipo de certificados
 export const getCertificateTypes = async (req, res) => {
@@ -33,7 +38,6 @@ export const getCertificateTypeById = async (req, res) => {
 //Crear un nuevo tipo de certificado
 export const createCertificateType = async (req, res) => {
   const certificateTypeData = req.body;
-  console.log("🚀 ~ file: certificateTypes.controller.js:36 ~ createCertificateType ~ certificateTypeData:", certificateTypeData)
   try {
     const newCertificateType = await CertificateType.create(certificateTypeData);
     res.status(201).json(newCertificateType);

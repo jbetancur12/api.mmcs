@@ -1,5 +1,5 @@
 import Sequelize from 'sequelize';
-import config from './config.js';
+import config from './configEnv.js';
 
 // Configura la conexión a tu base de datos PostgreSQL
 const sequelize = new Sequelize(config.dbName, config.dbUser, config.dbPass, {

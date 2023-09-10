@@ -1,6 +1,11 @@
 import { Op } from 'sequelize';
-import { File } from '../models/File.js';
-import { User } from '../models/User.js';
+// import { File } from '../models/file.cjs';
+// import { User } from '../models/user.cjs';
+
+import db from '../models/index.cjs';
+
+const User = db.user
+const File = db.file
 
 // Obtener todos los usuarios
 export const getUsers = async (req, res) => {

@@ -1,4 +1,7 @@
-import { User } from '../models/User.js';
+// import { User } from '../models/user.cjs';
+import db from '../models/index.cjs';
+
+const User = db.user
 
 export const assignRole = async (req, res) => {
   const { userId, newRole } = req.body;

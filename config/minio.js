@@ -1,5 +1,5 @@
 import { Client } from 'minio';
-import config from './config.js';
+import config from './configEnv.js';
 
 // Configura la conexión a Minio
 const minioClient = new Client({

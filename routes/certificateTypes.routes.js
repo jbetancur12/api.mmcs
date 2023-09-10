@@ -12,12 +12,12 @@ import { authenticateJWT, authorizeUserOrAdmin } from '../middlewares/authorizat
 const router = Router();
 
 // Rutas CRUD para usuarios
-router.get('/certificateTypes', getCertificateTypes);
-router.get('/certificateTypes/:id', authenticateJWT, authorizeUserOrAdmin, getCertificateTypeById);
-router.post('/certificateTypes', createCertificateType);
-router.put('/certificateTypes/:id', updateCertificateType);
-router.delete('/certificateTypes/:id' ,deleteCertificateType);
-router.get('/certificateTypes/:id/files', authenticateJWT, authorizeUserOrAdmin, getCertificateTypeFiles);
+router.get('/', getCertificateTypes);
+router.get('/:id', authenticateJWT, authorizeUserOrAdmin, getCertificateTypeById);
+router.post('/', createCertificateType);
+router.put('/:id', updateCertificateType);
+router.delete('/:id' ,deleteCertificateType);
+router.get('/:id/files', authenticateJWT, authorizeUserOrAdmin, getCertificateTypeFiles);
 
 
 export default router;

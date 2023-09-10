@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import config from '../config/config.js';
+import config from '../config/configEnv.js';
 
 
 export const authenticateJWT = (req, res, next) => {

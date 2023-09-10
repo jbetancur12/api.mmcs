@@ -1,5 +1,5 @@
 import app from './app.js';
-import config from './config/config.js';
+import config from './config/configEnv.js';
 import sequelize from './config/database.js';
 
 import { createAdminUser } from './create-admin-user.js';
@@ -7,7 +7,12 @@ import { createAdminUser } from './create-admin-user.js';
 // import './models/Device.js';
 // import './models/File.js';
 // import './models/User.js';
-import { User } from './models/User.js';
+// import { User } from './models/User.js';
+
+import db from './models/index.cjs';
+
+const User = db.user
+
 
 async function main() {
   sequelize.sync({ force: false }).then(async () => {

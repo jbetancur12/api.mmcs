@@ -1,6 +1,9 @@
 import { Op } from 'sequelize';
-import { Device } from '../models/Device.js';
-import { File } from '../models/File.js';
+
+import db from '../models/index.cjs';
+
+const Device = db.device
+const File = db.file
 
 // Obtener todos los usuarios
 export const getDevices = async (req, res) => {

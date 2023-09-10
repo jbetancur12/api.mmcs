@@ -1,7 +1,11 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import config from '../config/config.js';
-import { User } from '../models/User.js';
+import config from '../config/configEnv.js';
+// import { User } from '../models/User.js';
+
+import db from '../models/index.cjs';
+
+const User = db.user
 
 // Secret key para firmar y verificar JWT (debería ser más seguro en producción)
 const JWT_SECRET = config.jwtSecret;

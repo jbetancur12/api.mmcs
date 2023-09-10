@@ -6,10 +6,10 @@ import { authenticateJWT, authorizeAdmin, validateToken as validation } from '..
 const router = Router();
 
 // Rutas de autenticación
-router.post('/auth/login', loginUser);
-router.post('/auth/register', registerUser);
-router.post('/auth/assign-role',  authenticateJWT, authorizeAdmin, assignRole);
-router.get('/auth/validateToken',  validation, validateToken);
+router.post('/login', loginUser);
+router.post('/register', registerUser);
+router.post('/assign-role',  authenticateJWT, authorizeAdmin, assignRole);
+router.get('/validateToken',  validation, validateToken);
 // router.post('/logout', logoutUser);
 
 export default router;

@@ -11,12 +11,12 @@ import { authenticateJWT, authorizeUserOrAdmin } from '../middlewares/authorizat
 const router = Router();
 
 // Rutas CRUD para usuarios
-router.get('/users', getUsers);
-router.get('/users/:id', authenticateJWT, authorizeUserOrAdmin, getUserById);
-// router.post('/users', createUser);
-router.put('/users/:id', updateUser);
-router.delete('/users/:id' ,deleteUser);
-router.get('/users/:id/files', authenticateJWT, authorizeUserOrAdmin, getUserFiles);
+router.get('/', getUsers);
+router.get('/:id', authenticateJWT, authorizeUserOrAdmin, getUserById);
+// router.post('/', createUser);
+router.put('/:id', updateUser);
+router.delete('/:id' ,deleteUser);
+router.get('/:id/files', authenticateJWT, authorizeUserOrAdmin, getUserFiles);
 
 
 export default router;

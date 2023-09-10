@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
 import { File } from './File.js';
 
-export const CertificateType = sequelize.define('certificateTypes', {
+export const Device = sequelize.define('devices', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -15,12 +15,13 @@ export const CertificateType = sequelize.define('certificateTypes', {
 });
 
 
-CertificateType.hasMany(File, {
-  foreignKey: 'certificateTypeId',
-  sourceKey: 'id'
+Device.hasMany(File, {
+  foreignKey: 'deviceId',
+  // sourceKey: 'id'
 })
 
-File.belongsTo(CertificateType, {
-  foreignKey: 'certificateTypeId',
-  targetId: 'id'
+File.belongsTo(Device, {
+  foreignKey: 'deviceId',
+  // targetId: 'id'
 })
+

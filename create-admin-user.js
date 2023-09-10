@@ -1,6 +1,8 @@
 import bcrypt from 'bcrypt';
 import 'dotenv/config';
-import { User } from './models/User.js';
+import db from './models/index.cjs';
+
+const User = db.user
 
 export const createAdminUser = async () => {
   try {
@@ -10,12 +12,11 @@ export const createAdminUser = async () => {
     if (!existingAdmin) {
       // Si el usuario administrador no existe, crearlo
       const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASS, 10);
-
       await User.create({
         nombre: 'Administrator',
         email: process.env.ADMIN_USER,
         contraseña: hashedPassword,
-        identificacion: "00000000",
+        // customerId:0,
         rol: 'admin', // Asigna el rol de administrador
       });
 

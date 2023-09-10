@@ -1,9 +1,18 @@
-import config from "../config/config.js";
+import config from "../config/configEnv.js";
 import minioClient from "../config/minio.js";
-import { CertificateType } from "../models/CertificateType.js";
-import { Device } from "../models/Device.js";
-import { File } from "../models/File.js";
-import { User } from "../models/User.js";
+// import { CertificateType } from "../models/certificatetype.cjs";
+// import { Device } from "../models/device.cjs";
+// import { File } from "../models/file.cjs";
+// import { User } from "../models/user.cjs";
+
+
+import db from '../models/index.cjs';
+
+
+const Device = db.device
+const File = db.file
+const User = db.user
+const CertificateType = db.certificateType
 
 
 

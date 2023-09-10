@@ -8,12 +8,12 @@ const router = Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-router.get('/files', authenticateJWT, authorizeUserOrAdmin, getFiles)
-router.post('/files', upload.single('pdf'), authenticateJWT, authorizeAdmin, createFile)
-// router.put('/files/:id')
-// router.delete('/files/:id', authenticateJWT, authorizeAdmin, deleteFile)
-router.delete('/files/:id', authenticateJWT, authorizeAdmin, deleteFile)
-router.get('/files/:id',  authenticateJWT, authorizeAdmin, getFile)
-router.get('/files/download/:id', authenticateJWT, authorizeAdmin, downloadFile)
+router.get('/', authenticateJWT, authorizeUserOrAdmin, getFiles)
+router.post('/', upload.single('pdf'), authenticateJWT, authorizeAdmin, createFile)
+// router.put('//:id')
+// router.delete('//:id', authenticateJWT, authorizeAdmin, deleteFile)
+router.delete('/:id', authenticateJWT, authorizeAdmin, deleteFile)
+router.get('/:id',  authenticateJWT, authorizeAdmin, getFile)
+router.get('/download/:id', authenticateJWT, authorizeAdmin, downloadFile)
 
 export default router;
