@@ -4,6 +4,7 @@ import config from '../config/config.js';
 
 export const authenticateJWT = (req, res, next) => {
   let token = req.header('Authorization');
+  console.log("🚀 ~ file: authorizationMiddleware.js:7 ~ authenticateJWT ~ token:", token)
 
   if (!token) {
     return res.status(401).json({ error: 'Acceso no autorizado' });
@@ -26,7 +27,7 @@ export const authenticateJWT = (req, res, next) => {
 
 export const authorizeAdmin = (req, res, next) => {
   // Verificar si el usuario tiene permisos de administrador
-
+console.log(req.user)
   if (req.user && req.user.rol === 'admin') {
     // Si el usuario es un administrador, permite que la solicitud continúe
     next();
@@ -37,10 +38,11 @@ export const authorizeAdmin = (req, res, next) => {
 };
 
 export const authorizeUserOrAdmin = (req, res, next) => {
+  console.log(req.user)
   const userId = req.user.userId; // Obtén el ID del usuario autenticado
   const requestedUserId = parseInt(req.params.id); // Obtén el ID del usuario solicitado desde la ruta
 
-  if (userId === requestedUserId || req.user.rol === 'admin') {
+  if (req.user.rol === 'user' || req.user.rol === 'admin') {
     // Si el usuario es el mismo que el solicitado o es un administrador, permite el acceso
     next();
   } else {
@@ -49,4 +51,26 @@ export const authorizeUserOrAdmin = (req, res, next) => {
   }
 };
 
+
+export const validateToken = (req, res, next) => {
+  let token = req.header('Authorization');
+
+
+  if (!token) {
+    return res.status(401).json({ message: 'Token no proporcionado' });
+  }
+
+  if (token.startsWith('Bearer ')) {
+    token = token.slice(7);
+  }
+
+  try {
+    // Verificar y decodificar el token
+    const decoded = jwt.verify(token, config.jwtSecret);
+    req.user = decoded; // Guardar los datos del usuario en el objeto de solicitud para su posterior uso
+    next(); // Continuar con la siguiente función middleware
+  } catch (error) {
+    return res.status(401).json({ message: 'Token no válido' });
+  }
+}
 

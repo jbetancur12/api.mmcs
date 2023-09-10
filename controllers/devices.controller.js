@@ -1,13 +1,32 @@
+import { Op } from 'sequelize';
 import { Device } from '../models/Device.js';
 import { File } from '../models/File.js';
 
 // Obtener todos los usuarios
 export const getDevices = async (req, res) => {
   try {
-    const devices = await Device.findAll();
-    res.status(200).json(devices);
+    const { q } = req.query; // Obtiene el parámetro de búsqueda "q" de la consulta
+
+    if (q) {
+      // Si se proporciona un valor de búsqueda, realiza una búsqueda filtrada
+      const filteredDevices = await Device.findAll({
+        where: {
+          // Define las condiciones de búsqueda aquí, por ejemplo, para buscar por nombre
+          name: {
+            [Op.like]: `%${q}%`, // Utiliza el operador LIKE para buscar coincidencias parciales
+          },
+        },
+      });
+
+
+      res.status(200).json(filteredDevices);
+    } else {
+      // Si no se proporciona un valor de búsqueda, obtén todos los usuarios
+      const users = await Device.findAll();
+      res.status(200).json(users);
+    }
   } catch (error) {
-    res.status(500).json({ error: 'Error al obtener usuarios' });
+    res.status(500).json({ error: 'Error al obtener equipos' });
   }
 };
 

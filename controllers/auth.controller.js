@@ -74,3 +74,25 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ error: 'Error al iniciar sesión' });
   }
 };
+
+export const validateToken = async (req,res)=>{
+  try {
+    // Supongamos que estás utilizando un modelo de usuario llamado UserModel
+    const userId = req.user.userId; // El ID del usuario decodificado desde el token
+    const user = await User.findByPk(userId,{
+      attributes: {
+        exclude: ['contraseña',"id"], // Excluye el campo 'contraseña' del resultado
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+
+    res.json({ message: 'Token válido', user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al buscar el usuario' });
+  }
+}

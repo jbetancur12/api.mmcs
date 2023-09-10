@@ -1,18 +1,49 @@
 import config from "../config/config.js";
 import minioClient from "../config/minio.js";
+import { CertificateType } from "../models/CertificateType.js";
+import { Device } from "../models/Device.js";
 import { File } from "../models/File.js";
+import { User } from "../models/User.js";
 
 
 
 export const getFiles = async (req, res) => {
-  const files = await File.findAll();
-  res.json(files)
-}
+  try {
+    const authenticatedUser = req.user;
+
+    // Verificar si el usuario tiene el rol de administrador
+    if (authenticatedUser.rol === "admin") {
+      const files = await File.findAll({
+        include: [
+          { model: User },
+          { model: Device },
+          { model: CertificateType },
+        ],
+      });
+      res.json(files);
+    } else {
+      // Si el usuario no es administrador, mostrar solo sus archivos
+      const userFiles = await File.findAll({
+        where: { userId: authenticatedUser.userId },
+        include: [
+          { model: User },
+          { model: Device },
+          { model: CertificateType },
+        ],
+      });
+      res.json(userFiles);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener los archivos' });
+  }
+};
+
 
 //POST
 export const createFile = (req, res) => {
   const file = req.file;
-  const { name, dalibrationDate, userId, deviceId } = req.body;
+  const { name, calibrationDate, userId, deviceId, certificateTypeId, nextCalibrationDate, city, location, sede, activoFijo, serie } = req.body;
 
 
   const finalName = name ? name : file.originalname;
@@ -28,13 +59,20 @@ export const createFile = (req, res) => {
     try {
       const newFile = await File.create({
         name: file.originalname,
-        dalibrationDate: new Date(dalibrationDate), // Puedes ajustar esta fecha según tus necesidades
+        calibrationDate: new Date(calibrationDate), // Puedes ajustar esta fecha según tus necesidades
         filePath: fileName,
         userId,
-        deviceId
+        deviceId,
+        certificateTypeId,
+        nextCalibrationDate,
+        city,
+        location,
+        sede,
+        activoFijo,
+        serie
       });
 
-      res.json({
+      res.status(201).json({
         message: 'Archivo subido exitosamente',
         pathArchivo: fileName,
         fileId: newFile.id, // Puedes enviar el ID del archivo recién creado si lo necesitas
@@ -102,6 +140,7 @@ export const deleteFile = async (req, res) => {
     // Buscar el archivo en la base de datos por su ID
     const file = await File.findByPk(fileId);
 
+
     if (!file) {
       return res.status(404).json({ message: 'Archivo no encontrado' });
     }
@@ -109,8 +148,9 @@ export const deleteFile = async (req, res) => {
     // Obtener el nombre del archivo desde la base de datos
     const fileName = file.filePath;
 
+
     // Eliminar el archivo de MinIO
-    minioClient.removeObject(config.bucketName, fileName, (err) => {
+    minioClient.removeObject(config.minioBucketName, fileName, (err) => {
       if (err) {
         console.error(err);
         return res.status(500).send('Error al eliminar el archivo de MinIO');

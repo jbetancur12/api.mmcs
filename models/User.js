@@ -54,8 +54,21 @@ export const User = sequelize.define('users', {
   active: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
+  },
+  verificationCode: {
+    type: DataTypes.STRING,
   }
 });
+
+User.beforeCreate(async (user, options) => {
+  // Generar un código de verificación seguro usando bcrypt
+  const saltRounds = 10; // Puedes ajustar el número de rondas según tu preferencia
+  const verificationCode = await bcrypt.hash(Math.random().toString(36).substring(7), saltRounds);
+
+  // Asignar el código de verificación al usuario
+  user.verificationCode = verificationCode;
+});
+
 
 User.hasMany(File, {
   foreignKey: 'userId',
