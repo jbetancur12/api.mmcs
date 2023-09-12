@@ -19,7 +19,6 @@ if (config.use_env_variable) {
 fs
 .readdirSync(__dirname)
 .filter(file => {
-    console.log("🚀 ~ file: index.cjs:13 ~ sequelize:", file.slice(-4))
     return (
       file.indexOf('.') !== 0 &&
       file !== basename &&

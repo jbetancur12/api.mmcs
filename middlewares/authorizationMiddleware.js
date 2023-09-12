@@ -4,8 +4,6 @@ import config from '../config/configEnv.js';
 
 export const authenticateJWT = (req, res, next) => {
   let token = req.header('Authorization');
-  console.log("🚀 ~ file: authorizationMiddleware.js:7 ~ authenticateJWT ~ token:", token)
-
 
   if (!token) {
     return res.status(401).json({ error: 'Acceso no autorizado' });

@@ -13,7 +13,16 @@ const config = {
   minioHost:  process.env.MINIO_HOST || 'localhost',
   minioAccessKey: process.env.MINIO_ACCESS_KEY || 'tu_access_key', // Reemplaza con tu clave de acceso de Minio
   minioSecretKey: process.env.MINIO_SECRET_KEY || 'tu_secret_key',
-  minioBucketName : process.env.MINIO_BUCKET_NAME
+  minioBucketName : process.env.MINIO_BUCKET_NAME,
+  emailFrom: 'proyectos@smaf.com.co',
+  smtp: {
+    service: 'gmail',
+    secure: false,
+    host: process.env.EMAIL_HOST,
+    pass: process.env.EMAIL_PASS,
+    port: process.env.EMAIL_PORT,
+    user: process.env.EMAIL_USER
+  }
 }
 
 export default config

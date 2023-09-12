@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import config from '../config/configEnv.js';
 // import { User } from '../models/User.js';
 
+import Email from '../helpers/email.js';
 import db from '../models/index.cjs';
 
 const User = db.user
@@ -41,6 +42,33 @@ export const registerUser = async (req, res) => {
       contraseña: hashedPassword,
     });
 
+    const redirectUrl = `/auth/new-password?code=${newUser.verificationCode}`
+    try {
+      await new Email(newUser, redirectUrl).sendVerificationCode()
+
+      // await send({
+      //     from: "sender@gmail.com",
+      //     to: "jorge.betancur@teads.tv",
+      //     subject: "test",
+      //     text: "Hola MUndo"
+      // })
+
+      // res.status(201).json({
+      //   status: 'success',
+      //   message:
+      //     'An email with a verification code has been sent to your email',
+      // });
+    } catch (error) {
+      user.verificationCode = null
+      await user.save()
+
+      // return res.status(500).json({
+      //   status: 'error',
+      //   message: 'There was an error sending email, please try again',
+      // });
+    }
+
+
 
     // Crear un token JWT para el nuevo usuario
     // const token = createToken(newUser.id, newUser.email);
@@ -58,6 +86,10 @@ export const loginUser = async (req, res) => {
   try {
     // Buscar al usuario por su dirección de correo electrónico
     const user = await User.findOne({ where: { email } });
+
+    if (!user.active) {
+      return res.status(400).send({ message: 'You are not verified' })
+    }
 
     // Verificar si el usuario existe y la contraseña es correcta
     if (!user || !(await bcrypt.compare(contraseña, user.contraseña))) {
@@ -106,3 +138,76 @@ export const validateToken = async (req,res)=>{
     res.status(500).json({ message: 'Error al buscar el usuario' });
   }
 }
+
+export const verifyEmailHandler = async (req, res, next) => {
+  console.log("🚀 ~ file: auth.controller.js:148 ~ verifyEmailHandler ~ req.params.verificationCode:", req.query)
+
+  try {
+    const user = await User.findOne({
+      where: {
+        verificationCode: req.query.code,
+      },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'No se pudo verificar' });
+    }
+
+    // Update user properties
+    user.active = true;
+    user.password = req.body.newPassword;
+    user.verificationCode = null;
+
+    // Save changes
+    await user.save();
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Email verified successfully',
+    });
+  } catch (err) {
+    res.status(500).json({error: err.message});
+  }
+}
+
+const recoverPassword = async (req, res) => {
+  try {
+    const user = await User.findOne({
+      where: {
+        email: req.body.email,
+      },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'El correo electronico no existe' });
+    }
+
+    const verificationCode = `${Math.floor(1000 + Math.random() * 9000)}`;
+
+    // Update user's verification code
+    await user.update({ verificationCode });
+
+    const redirectUrl = `${process.env.FRONTEND_URL}/auth/new-password?code=${verificationCode}`;
+
+    try {
+      await new Email(user, redirectUrl).sendVerificationCode(
+        'resetPassword',
+        'Reset Password'
+      );
+      res.status(201).json({
+        status: 'success',
+        message: 'An email with a verification code has been sent to your email',
+      });
+    } catch (error) {
+      // Handle email sending error
+      user.verificationCode = null;
+      await user.save();
+      return res.status(500).json({
+        status: 'error',
+        message: 'There was an error sending email, please try again',
+      });
+    }
+  } catch (error) {
+    res.status(500).json({error: err.message});
+  }
+};
