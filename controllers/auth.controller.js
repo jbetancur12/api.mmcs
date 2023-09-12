@@ -6,6 +6,7 @@ import config from '../config/configEnv.js';
 import db from '../models/index.cjs';
 
 const User = db.user
+const Customer = db.customer
 
 // Secret key para firmar y verificar JWT (debería ser más seguro en producción)
 const JWT_SECRET = config.jwtSecret;
@@ -19,7 +20,7 @@ const createToken = (userId, email, rol) => {
 // Registro de usuario
 export const registerUser = async (req, res) => {
 
-  const { nombre, email, contraseña, identificacion } = req.body;
+  const { nombre, email, contraseña, customerId } = req.body;
 
   try {
     // Verificar si el usuario ya existe
@@ -36,7 +37,7 @@ export const registerUser = async (req, res) => {
     const newUser = await User.create({
       nombre,
       email,
-      identificacion,
+      customerId,
       contraseña: hashedPassword,
     });
 
@@ -84,10 +85,15 @@ export const validateToken = async (req,res)=>{
     // Supongamos que estás utilizando un modelo de usuario llamado UserModel
     const userId = req.user.userId; // El ID del usuario decodificado desde el token
     const user = await User.findByPk(userId,{
+      include : [
+        {model: Customer}
+      ],
       attributes: {
-        exclude: ['contraseña',"id"], // Excluye el campo 'contraseña' del resultado
+        exclude: ['contraseña',"id", "customerId", "verificationCode"], // Excluye el campo 'contraseña' del resultado
       },
     });
+
+
 
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });

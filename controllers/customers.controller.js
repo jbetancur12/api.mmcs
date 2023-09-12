@@ -5,6 +5,7 @@ import db from '../models/index.cjs';
 
 const File = db.files
 const Customer = db.customer
+const User = db.user
 
 // Obtener todos los customers
 export const getCustomers = async (req, res) => {
@@ -84,6 +85,18 @@ export const getCustomerFiles = async (req, res) => {
   const { id } = req.params
   const files = await File.findAll({
     where: { customerId: id }
+  })
+
+  res.json(files)
+}
+
+export const getCustomerUsers = async (req, res) => {
+  const { id } = req.params
+  const files = await User.findAll({
+    where: { customerId: id },
+    include: [
+      { model: Customer },
+    ],
   })
 
   res.json(files)

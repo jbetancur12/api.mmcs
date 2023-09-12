@@ -6,6 +6,7 @@ export const authenticateJWT = (req, res, next) => {
   let token = req.header('Authorization');
   console.log("🚀 ~ file: authorizationMiddleware.js:7 ~ authenticateJWT ~ token:", token)
 
+
   if (!token) {
     return res.status(401).json({ error: 'Acceso no autorizado' });
   }
@@ -27,7 +28,7 @@ export const authenticateJWT = (req, res, next) => {
 
 export const authorizeAdmin = (req, res, next) => {
   // Verificar si el usuario tiene permisos de administrador
-console.log(req.user)
+
   if (req.user && req.user.rol === 'admin') {
     // Si el usuario es un administrador, permite que la solicitud continúe
     next();

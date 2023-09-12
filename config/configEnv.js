@@ -7,7 +7,7 @@ const config = {
   jwtExpiration: 3600, // 1 hour
   jwtRefreshExpiration: 86400, // 24 hours
   dbName: process.env.DB_NAME || "databaseName",
-  dbUser: process.env.USER || "root",
+  dbUser: process.env.USER || "postgres",
   dbPass: process.env.DB_PASS || "root",
   dbHost: process.env.DB_HOST || 'localhost',
   minioHost:  process.env.MINIO_HOST || 'localhost',

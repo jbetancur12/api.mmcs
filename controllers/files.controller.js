@@ -13,18 +13,19 @@ const Device = db.device
 const File = db.file
 const User = db.user
 const CertificateType = db.certificateType
+const Customer = db.customer
 
 
 
 export const getFiles = async (req, res) => {
   try {
     const authenticatedUser = req.user;
-
+    console.log("🚀 ~ file: files.controller.js:23 ~ getFiles ~ authenticatedUser:", authenticatedUser)
     // Verificar si el usuario tiene el rol de administrador
     if (authenticatedUser.rol === "admin") {
       const files = await File.findAll({
         include: [
-          { model: User },
+          { model: Customer },
           { model: Device },
           { model: CertificateType },
         ],
@@ -32,19 +33,26 @@ export const getFiles = async (req, res) => {
       res.json(files);
     } else {
       // Si el usuario no es administrador, mostrar solo sus archivos
+      const userCustomer = await User.findByPk(authenticatedUser.userId);
+      console.log("🚀 ~ file: files.controller.js:37 ~ getFiles ~ userCustomerId:", userCustomer)
       const userFiles = await File.findAll({
-        where: { userId: authenticatedUser.userId },
+        where: { customerId: userCustomer.customerId},
         include: [
-          { model: User },
+          { model: Customer },
           { model: Device },
           { model: CertificateType },
         ],
       });
+
+      if (userFiles.length === 0) {
+        return res.status(404).json({ message: 'No hay certificados' });
+      }
+
       res.json(userFiles);
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error al obtener los archivos' });
+    res.status(500).json({  error: error.message });
   }
 };
 
@@ -52,7 +60,7 @@ export const getFiles = async (req, res) => {
 //POST
 export const createFile = (req, res) => {
   const file = req.file;
-  const { name, calibrationDate, userId, deviceId, certificateTypeId, nextCalibrationDate, city, location, sede, activoFijo, serie } = req.body;
+  const { name, calibrationDate, customerId, deviceId, certificateTypeId, nextCalibrationDate, city, location, sede, activoFijo, serie } = req.body;
 
 
   const finalName = name ? name : file.originalname;
@@ -70,7 +78,7 @@ export const createFile = (req, res) => {
         name: file.originalname,
         calibrationDate: new Date(calibrationDate), // Puedes ajustar esta fecha según tus necesidades
         filePath: fileName,
-        userId,
+        customerId,
         deviceId,
         certificateTypeId,
         nextCalibrationDate,
