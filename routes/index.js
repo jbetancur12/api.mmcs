@@ -6,6 +6,7 @@ import certificateTypesRoute from './certificateTypes.routes.js';
 import customersRoute from './customers.routes.js';
 import devicesRoute from './devices.routes.js';
 import filesRoute from './files.routes.js';
+import mailRoute from './mail.routes.js';
 import usersRoute from './users.routes.js';
 
 const routersList = [
@@ -32,6 +33,10 @@ const routersList = [
   {
     path: '/customers',
     route: customersRoute
+  },
+  {
+    path: '/contact',
+    route: mailRoute
   }
 ];
 

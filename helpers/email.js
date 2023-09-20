@@ -11,12 +11,16 @@ const __dirname = path.dirname(__filename)
 const { emailFrom, smtp } = config
 
 export default class Email {
-  constructor (user, url, otp) {
+  constructor (user = {}, url ="", otp="", name="", email, subject="", message="") {
     this.firstName = user.firstName
-    this.to = user.email
+    this.to = user.email || email
     this.from = emailFrom
     this.url = url
     this.otp = otp
+    this.name = name
+    this.email = email
+    this.subject_ = subject
+    this.message = message
   }
 
   newTransport () {
@@ -41,16 +45,21 @@ export default class Email {
       firstName: this.firstName,
       subject,
       url: this.url,
-      otp: this.otp
+      otp: this.otp,
+      email_: this.email,
+      subject_: this.subject_,
+      name: this.name,
+      message: this.message
     })
     // Create mailOptions
     const mailOptions = {
-      from: `Plataforma Smaf <${this.from}>`,
+      from: `Metromedics SAS <${this.from}>`,
       to: this.to,
       subject,
       text: convert(html),
       html
     }
+    console.log("🚀 ~ file: email.js:62 ~ Email ~ send ~ mailOptions:", mailOptions)
 
     try {
       const info = await this.newTransport().sendMail(mailOptions)
@@ -61,6 +70,19 @@ export default class Email {
     // Send email
   }
 
+  async sendContactForm(
+    template = 'contactForm',
+    subject = 'Formulario de Contacto'
+  ){
+    try {
+
+      await this.send(template, subject)
+    } catch (error) {
+      console.log("🚀 ~ file: email.js:84 ~ Email ~ error:", error)
+
+    }
+  }
+
   async sendVerificationCode (
     template = 'verificationCode',
     subject = 'Activar Cuenta'
@@ -69,7 +91,7 @@ export default class Email {
 
       await this.send(template, subject)
     } catch (error) {
-      console.log("🚀 ~ file: email.js:72 ~ Email ~ error:", error)
+      console.log("🚀 ~ file: email.js:84 ~ Email ~ error:", error)
 
     }
   }

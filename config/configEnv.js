@@ -14,7 +14,8 @@ const config = {
   minioAccessKey: process.env.MINIO_ACCESS_KEY || 'tu_access_key', // Reemplaza con tu clave de acceso de Minio
   minioSecretKey: process.env.MINIO_SECRET_KEY || 'tu_secret_key',
   minioBucketName : process.env.MINIO_BUCKET_NAME,
-  emailFrom: 'proyectos@smaf.com.co',
+  emailFrom: process.env.EMAIL_USER,
+  frontURL: process.env.FRONT_URL,
   smtp: {
     service: 'gmail',
     secure: false,
