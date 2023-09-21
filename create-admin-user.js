@@ -16,6 +16,7 @@ export const createAdminUser = async () => {
         nombre: 'Administrator',
         email: process.env.ADMIN_USER,
         contraseña: hashedPassword,
+        active: true,
         // customerId:0,
         rol: 'admin', // Asigna el rol de administrador
       });
