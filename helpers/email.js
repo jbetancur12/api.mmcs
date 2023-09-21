@@ -59,7 +59,7 @@ export default class Email {
       text: convert(html),
       html
     }
-    console.log("🚀 ~ file: email.js:62 ~ Email ~ send ~ mailOptions:", mailOptions)
+
 
     try {
       const info = await this.newTransport().sendMail(mailOptions)
@@ -76,7 +76,7 @@ export default class Email {
   ){
     try {
 
-      await this.send(template, subject)
+     await this.send(template, subject)
     } catch (error) {
       console.log("🚀 ~ file: email.js:84 ~ Email ~ error:", error)
 
