@@ -42,7 +42,7 @@ export const registerUser = async (req, res) => {
       contraseña: hashedPassword,
     });
 
-    const redirectUrl = `/auth/new-password?code=${newUser.verificationCode}`
+    const redirectUrl = `${config.frontURL}/new-password?code=${newUser.verificationCode}`
     try {
       await new Email(newUser, redirectUrl).sendVerificationCode()
 
